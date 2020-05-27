@@ -22,7 +22,7 @@ const customStyles = {
 };
 const TabContainer = function(props){
     return(
-        <Typography component="div" style={{padding: 20}}>
+        <Typography component="div" style={{padding: 20, textAlign: "center"}}>
             {props.children}
         </Typography>
     );
@@ -62,12 +62,14 @@ class Header extends Component {
                     <TabContainer>
                         <FormControl required>  
                             <InputLabel htmlFor="userName">Username</InputLabel>
-                            <Input id="userName" type="text"></Input>Z
-                        </FormControl>
+                            <Input id="userName" type="text"></Input>
+                        </FormControl><br /><br />
                         <FormControl required> 
                             <InputLabel htmlFor="password">Password</InputLabel>
                             <Input id="password" type="password"></Input>
-                        </FormControl>
+                        </FormControl><br /><br />
+                        <Button variant="contained" color="primary">LOGIN</Button>
+
 
                     </TabContainer>
 
