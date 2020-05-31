@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './Header.css';
+import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 import logo from '../../assets/logo.svg';
 import Modal from 'react-modal';
@@ -12,6 +13,7 @@ import Input from '@material-ui/core/Input';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import BookShow from '../../screens/bookShow/BookShow';
 const customStyles = {
     content: {
         top: '50%',
@@ -120,6 +122,9 @@ class Header extends Component {
     inputContactChangeHandler = (e) => {
         this.setState({ contact: e.target.value });
     }
+    bookShowHandler=()=>{
+        ReactDOM.render(<BookShow />,document.getElementById('root'));
+    }
     render() {
         return (
             <div>
@@ -127,7 +132,11 @@ class Header extends Component {
                     <img src={logo} className="app-logo" alt="app-logo" />
                     <div className="loginBtn">
                         <Button  variant="contained" color="default" onClick={this.openModalHandler}>Login</Button>
-                    </div>  
+                    </div>
+                    {this.props.showBookShowButton === "true" ?
+                    <div className="bookshow-button">
+                        <Button variant='contained' color='primary' onClick={this.bookShowHandler}>Book Show</Button>
+                    </div> : ""}
                 </header>
                 <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} onRequestClose={this.closeModalHandler} style={customStyles} contentLabel="Login"> 
                     <Tabs value={this.state.value} onChange={this.tabChangeHandler}>
