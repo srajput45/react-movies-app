@@ -3,6 +3,7 @@ import './Details.css';
 import Header from '../../common/header/Header';
 import moviesData from '../../common/movieData';
 import Typography from '@material-ui/core/Typography';
+import { Link } from '@material-ui/core';
  
 class Details extends Component{
     constructor() {
@@ -33,8 +34,28 @@ class Details extends Component{
                             <Typography variant='headline' component='h2'>{movie.title}</Typography>
                         </div>
                         <div>
-                            <Typography className='bold'>
-                                Genres: {movie.genres.join(', ')}
+                            <Typography>
+                            <span className="bold">Genres: </span> {movie.genres.join(', ')}
+                            </Typography>
+                        </div>
+                        <div>
+                            <Typography>
+                                <span className="bold">Duration: </span>{movie.duration}
+                            </Typography>
+                        </div>
+                        <div>
+                            <Typography>
+                                <span className="bold">Release Date: </span>{new Date(movie.release_date).toDateString()}
+                            </Typography>
+                        </div>
+                        <div>
+                            <Typography>
+                                <span className="bold">Rating: </span>{movie.critics_rating}
+                            </Typography>
+                        </div>
+                        <div className="marginTop16">
+                            <Typography >
+                                <span className="bold">Plot: </span> <a href={movie.wiki_url}>(Wiki Link)</a> {movie.storyline}
                             </Typography>
                         </div>
                     </div>
