@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import './Header.css';
-import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 import logo from '../../assets/logo.svg';
 import Modal from 'react-modal';
@@ -13,7 +12,7 @@ import Input from '@material-ui/core/Input';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import BookShow from '../../screens/bookShow/BookShow';
+import { Link } from 'react-router-dom';
 const customStyles = {
     content: {
         top: '50%',
@@ -53,7 +52,8 @@ class Header extends Component {
             registerPasswordRequired: "dispNone",
             registerPassword: "",
             contactRequired: "dispNone",
-            contact: ""
+            contact: "",
+            registrationSuccess: false
         }; 
     }
     
@@ -101,6 +101,29 @@ class Header extends Component {
         this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
         this.state.registerPassword === "" ? this.setState({ registerPasswordRequired: "dispBlock" }) : this.setState({ registerPasswordRequired: "dispNone" });
         this.state.contact === "" ? this.setState({ contactRequired: "dispBlock" }) : this.setState({ contactRequired: "dispNone" });
+
+        let dataSignup = JSON.stringify({
+            "email_address": this.state.email,
+            "first_name": this.state.firstname,
+            "last_name": this.state.lastname,
+            "mobile_number": this.state.contact,
+            "password": this.state.registerPassword
+        });
+
+        let xhrSignup = new XMLHttpRequest();
+        let that = this;
+        xhrSignup.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    registrationSuccess: true
+                });
+            }
+        });
+
+        xhrSignup.open("POST", this.props.baseUrl + "signup");
+        xhrSignup.setRequestHeader("Content-Type", "application/json");
+        xhrSignup.setRequestHeader("Cache-Control", "no-cache");
+        xhrSignup.send(dataSignup);
     }
 
     inputFirstNameChangeHandler = (e) => {
@@ -122,9 +145,8 @@ class Header extends Component {
     inputContactChangeHandler = (e) => {
         this.setState({ contact: e.target.value });
     }
-    bookShowHandler=()=>{
-        ReactDOM.render(<BookShow />,document.getElementById('root'));
-    }
+
+    
     render() {
         return (
             <div>
@@ -135,7 +157,11 @@ class Header extends Component {
                     </div>
                     {this.props.showBookShowButton === "true" ?
                     <div className="bookshow-button">
-                        <Button variant='contained' color='primary' onClick={this.bookShowHandler}>Book Show</Button>
+                        <Link to={"/bookshow/" + this.props.id}>
+                            <Button variant="contained" color="primary">
+                                Book Show
+                            </Button>
+                        </Link>
                     </div> : ""}
                 </header>
                 <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} onRequestClose={this.closeModalHandler} style={customStyles} contentLabel="Login"> 
@@ -204,6 +230,13 @@ class Header extends Component {
                             </FormHelperText>
                         </FormControl>
                         <br /><br />
+                        {this.state.registrationSuccess === true &&
+                                <FormControl>
+                                    <span className="successText">
+                                        Registration Successful. Please Login!
+                                      </span>
+                                </FormControl>
+                            }
                         <Button variant="contained" color="primary" onClick={this.registerClickHandler}>REGISTER</Button>
                     </TabContainer>
                     }

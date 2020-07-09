@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import Header from '../../common/header/Header';
-import './BookShow.css';
-import Home from '../home/Home';
 import Typography from '@material-ui/core/Typography';
+import './BookShow.css';
 import language from '../../common/language';
 import location from '../../common/location';
 import showDate from '../../common/showDate';
@@ -16,12 +14,12 @@ import Input from '@material-ui/core/Input';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-
 import FormHelperText from '@material-ui/core/FormHelperText';
+import { Link } from 'react-router-dom';
 
 class BookShow extends Component {
 
-    constructor(){
+    constructor() {
         super();
         this.state = {
             location: "",
@@ -38,10 +36,8 @@ class BookShow extends Component {
             reqTickets: "dispNone"
         }
     }
-    
-    backToDetailsHandler=()=>{
-        ReactDOM.render(<Home />,document.getElementById('root'));
-    }
+
+
     locationChangeHandler = event => {
         this.setState({ location: event.target.value });
     }
@@ -57,24 +53,35 @@ class BookShow extends Component {
     showTimeChangeHandler = event => {
         this.setState({ showTime: event.target.value });
     }
-    ticketsChangeHandler = (event) => {
-        this.setState({ tickets: event.target.value })
+
+    ticketsChangeHandler = event => {
+        this.setState({ tickets: event.target.value });
     }
+
     bookShowButtonHandler = () => {
         this.state.location === "" ? this.setState({ reqLocation: "dispBlock" }) : this.setState({ reqLocation: "dispNone" });
         this.state.language === "" ? this.setState({ reqLanguage: "dispBlock" }) : this.setState({ reqLanguage: "dispNone" });
         this.state.showDate === "" ? this.setState({ reqShowDate: "dispBlock" }) : this.setState({ reqShowDate: "dispNone" });
         this.state.showTime === "" ? this.setState({ reqShowTime: "dispBlock" }) : this.setState({ reqShowTime: "dispNone" });
         this.state.tickets === 0 ? this.setState({ reqTickets: "dispBlock" }) : this.setState({ reqTickets: "dispNone" });
+
+        if ((this.state.location === "") || (this.state.language === "") || (this.state.showTime === "") || (this.state.showDate === "") || (this.state.tickets === 0)) { return; }
+
+        this.props.history.push({
+            pathname: '/confirm/' + this.props.match.params.id,
+            bookingSummary: this.state
+        })
     }
+
     render() {
         return (
             <div>
                 <Header />
                 <div className="bookShow">
-                    <Typography  className='back' onClick={this.backToDetailsHandler}>
-                    &#60; Back to Movie Details
+                    <Typography className="back" >
+                        <Link to={"/movie/" + this.props.match.params.id}>&#60; Back to Movie Details</Link>
                     </Typography>
+
                     <Card className="cardStyle">
                         <CardContent>
                             <Typography variant="headline" component="h2">
@@ -110,7 +117,7 @@ class BookShow extends Component {
                                         </MenuItem>
                                     ))}
                                 </Select>
-                                <FormHelperText className={this.state.reqLocation}>
+                                <FormHelperText className={this.state.reqLanguage}>
                                     <span className="red">Required</span>
                                 </FormHelperText>
                             </FormControl>
@@ -127,7 +134,7 @@ class BookShow extends Component {
                                         </MenuItem>
                                     ))}
                                 </Select>
-                                <FormHelperText className={this.state.reqLocation}>
+                                <FormHelperText className={this.state.reqShowDate}>
                                     <span className="red">Required</span>
                                 </FormHelperText>
                             </FormControl>
@@ -144,7 +151,7 @@ class BookShow extends Component {
                                         </MenuItem>
                                     ))}
                                 </Select>
-                                <FormHelperText className={this.state.reqLocation}>
+                                <FormHelperText className={this.state.reqShowTime}>
                                     <span className="red">Required</span>
                                 </FormHelperText>
                             </FormControl>
@@ -152,10 +159,10 @@ class BookShow extends Component {
                             <FormControl required className="formControl">
                                 <InputLabel htmlFor="tickets">Tickets: ( {this.state.availableTickets} available )</InputLabel>
                                 <Input id="tickets" value={this.state.tickets !== 0 ? this.state.tickets : ""} onChange={this.ticketsChangeHandler} />
-                            </FormControl>
-                            <FormHelperText className={this.state.reqTickets}>
+                                <FormHelperText className={this.state.reqTickets}>
                                     <span className="red">Required</span>
                                 </FormHelperText>
+                            </FormControl>
                             <br /><br />
                             <Typography>
                                 Unit Price: Rs. {this.state.unitPrice}
